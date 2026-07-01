@@ -1,0 +1,70 @@
+name: Check Generated
+
+# Un-bypassable freshness gate: regenerate the Claude plugin from canonical/
+# and fail if committed root output drifts from a fresh `node build.mjs`.
+
+on:
+  push:
+    paths:
+      - 'canonical/**'
+      - '.claude-plugin/**'
+      - 'hooks/**'
+      - 'skills/**'
+      - 'sounds/**'
+      - 'config/**'
+      - 'assets/**'
+      - 'configurator/**'
+      - 'configurator.mjs'
+      - 'website.*.toml'
+      - 'tools/**'
+      - 'manifests/**'
+      - 'build.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/check-generated.yml'
+  pull_request:
+    paths:
+      - 'canonical/**'
+      - '.claude-plugin/**'
+      - 'hooks/**'
+      - 'skills/**'
+      - 'sounds/**'
+      - 'config/**'
+      - 'assets/**'
+      - 'configurator/**'
+      - 'configurator.mjs'
+      - 'website.*.toml'
+      - 'tools/**'
+      - 'manifests/**'
+      - 'build.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/check-generated.yml'
+
+jobs:
+  check-generated:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Regenerate plugin
+        run: node build.mjs
+
+      - name: Verify generated output is fresh
+        run: |
+          git diff --exit-code -- \
+            .claude-plugin hooks skills sounds config assets configurator configurator.mjs \
+            website.plugin.toml website.philosophy.toml website.skills.toml tools manifests .gitignore
+
+      - name: Validate plugin
+        run: npx --yes @anthropic-ai/claude-code@latest plugin validate .

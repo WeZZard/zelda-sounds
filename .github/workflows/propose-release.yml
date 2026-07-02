@@ -10,8 +10,9 @@ concurrency:
 jobs:
   propose:
     if: github.repository == 'WeZZard/zelda-sounds'
-    uses: WeZZard/workflows/.github/workflows/propose-release.yml@v1.0.0
+    uses: WeZZard/workflows/.github/workflows/propose-release.yml@v1.0.1
     with:
       version_file: canonical/manifest.json
     secrets:
       RELEASE_TOKEN: ${{ secrets.ZELDA_SOUNDS_RELEASE_TOKEN }}
+      OPENCODE_AUTH_JSON: ${{ secrets.OPENCODE_AUTH_JSON }}

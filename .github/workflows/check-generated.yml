@@ -64,7 +64,7 @@ jobs:
         run: |
           git diff --exit-code -- \
             .claude-plugin hooks skills sounds config assets configurator configurator.mjs \
-            website.plugin.toml website.philosophy.toml website.skills.toml tools manifests .gitignore
+            tools manifests .gitignore
 
       - name: Validate plugin
         run: npx --yes @anthropic-ai/claude-code@latest plugin validate .

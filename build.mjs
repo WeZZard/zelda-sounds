@@ -34,9 +34,6 @@ const GENERATED_PATHS = [
   "manifests",
   "configurator",
   "configurator.mjs",
-  "website.plugin.toml",
-  "website.philosophy.toml",
-  "website.skills.toml",
   ".gitignore",
 ];
 
@@ -155,10 +152,6 @@ async function buildClaude(outDir) {
   copyInto(join(SRC, "skills"), join(outDir, "skills"));
   if (existsSync(join(SRC, ".gitignore"))) {
     copyInto(join(SRC, ".gitignore"), join(outDir, ".gitignore"));
-  }
-
-  for (const name of ["plugin", "philosophy", "skills"]) {
-    copyInto(join(SRC, "website", `${name}.toml`), join(outDir, `website.${name}.toml`));
   }
 
   copyInto(join(SRC, "authoring", "tools"), join(outDir, "tools"));
